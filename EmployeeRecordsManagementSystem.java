@@ -1,7 +1,7 @@
 package employeeManagement;
 
 
-public class employeeManagement {
+public class EmployeeRecordsManagementSystem {
 	public static void main(String args[]) {
 		
 	}
