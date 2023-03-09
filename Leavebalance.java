@@ -15,5 +15,23 @@ public class Leavebalance {
 		this.endDate=endDate;
 		this.status=status;
 	}
+	public int getEmpId() {
+		return emp_id;
+	}
+	public int getLeaveBalance() {
+		return leave_balance;
+	}
+	public int getLeaveUsed() {
+		return leave_used;
+	}
+	public Date getStartDate() {
+		return startDate;
+	}
+	public Date endDate() {
+		return endDate;
+	}
+	public String getStatus() {
+		return status;
+	}
 	
 }
