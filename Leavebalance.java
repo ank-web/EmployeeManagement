@@ -33,5 +33,31 @@ public class Leavebalance {
 	public String getStatus() {
 		return status;
 	}
+	private void setLeaveBalance(int leavebalance) {
+		this.leave_balance=leavebalance;
+	}
+	private void setStatus(String string) {
+		this.status=string;
+		
+	}
+	private void setLeaveUsed(int i) {
+		this.leave_used+=i;
+		
+	}
+	
+	//methods 
+	public void approveRejectLeave(int daysRequested) {
+	    int balance = getLeaveBalance();
+	    int used = getLeaveUsed();
+
+	    if (balance >= daysRequested && ( daysRequested <= 2)) {
+	           setLeaveBalance(balance - daysRequested);
+	           setLeaveUsed(used + daysRequested);
+	           setStatus("Approved");
+	    } else {
+	        setStatus("Insufficient balance or leave duration is not approved");
+	    }
+	}
+
 	
 }
