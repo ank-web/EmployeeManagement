@@ -16,5 +16,10 @@ public class Salary {
 	//methods
 	public double getSalary() {return 0.0;};
 	
-	public void calaculateSalary() {};
+	public double calaculateSalary() {
+		if (leaveBalance < 4) {
+	        this.salary -= Math.abs(4-this.leaveBalance)*(salary / 30); // Assuming a month has 30 days
+	    }
+		return this.salary;
+	};
 }
