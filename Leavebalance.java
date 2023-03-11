@@ -3,11 +3,12 @@ package employeeManagement;
 import java.util.Date;
 
 public class Leavebalance {
-	private int emp_id, leave_balance,leave_used;
+	private int id,emp_id, leave_balance,leave_used;
 	private Date startDate,endDate;
 	private String status;
-	public Leavebalance(int emp_id,int leave_balance,int leave_used
+	public Leavebalance(int id,int emp_id,int leave_balance,int leave_used
 			,Date startDate,Date endDate,String status) {
+		this.id=id;
 		this.emp_id=emp_id;
 		this.leave_balance=leave_balance;
 		this.leave_used=leave_used;
@@ -57,7 +58,5 @@ public class Leavebalance {
 	    } else {
 	        setStatus("Insufficient balance or leave duration is not approved");
 	    }
-	}
-
-	
+	}	
 }
