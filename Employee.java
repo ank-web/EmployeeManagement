@@ -147,7 +147,7 @@ class Employee{
 	    }
 	}
 
-	public String getFirstName(int emp_id, Connection conn) throws SQLException {
+	public static String getFirstName(int emp_id, Connection conn) throws SQLException {
 	    String sql = "SELECT first_name FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
