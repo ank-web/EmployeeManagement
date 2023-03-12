@@ -1,24 +1,14 @@
 package employeeManagement;
 
 //package employeeManagement;
-import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
 
-//enum EmployeeStatus {
-//  INTERN,
-//  FULL_TIME,
-//  CONTRACTOR
-//}
+
 
 class Employee{
 	
@@ -45,32 +35,6 @@ class Employee{
 		this.status=status;
 	}
 	
-
-	
-  public List<Employee> getEmployees(Connection conn,int emp_id) throws SQLException {
-      // Retrieve all employees from the database
-      List<Employee> employees = new ArrayList<>();
-//      String sql = "SELECT e.* FROM employee e JOIN ";
-      Statement stmt = conn.createStatement();
-      ResultSet rs = stmt.executeQuery(sql);
-      while (rs.next()) {
-          Employee employee = new Employee(
-              rs.getInt("emp_id"),
-              rs.getString("first_name"),
-              rs.getString("last_name"),
-              rs.getString("email"),
-              rs.getString("address"),
-              rs.getInt("phone"),
-              rs.getDate("hire_date"),
-              EmployeeStatus.valueOf(rs.getString("status_name")),
-              rs.getString("job_title"),
-              rs.getString("department"),
-              rs.getDouble("salary")
-          );
-          employees.add(employee);
-      }
-      return employees;
-  }
   
   public void addEmployee(Connection conn, Employee employee) throws SQLException {
   	
@@ -83,15 +47,17 @@ class Employee{
       stmt.setString(4, employee.getEmail());
       stmt.setInt(5, employee.getPhone());
       stmt.setString(6, employee.getAddress());
-      stmt.setDate(7, new java.sql.LocalDate(employee.getHireDate().getTime()));
-      stmt.setInt(8, employee.getStatus().ordinal());
+      stmt.setDate(7, java.sql.Date.valueOf(employee.getJoiningDate()));
+      stmt.setString(8, employee.getStatus());
       stmt.setString(9, employee.getJobTitle());
       stmt.setString(10, employee.getDepartment());
       stmt.setDouble(11, employee.getSalary());
       stmt.executeUpdate();
   }
-  
-  
+
+
+
+
 
 	public void updateEmployee(Connection conn, Employee employee) throws SQLException {
   	
@@ -103,8 +69,8 @@ class Employee{
       stmt.setString(3, employee.getEmail());
       stmt.setInt(4, employee.getPhone());
       stmt.setString(5, employee.getAddress());
-      stmt.setDate(6, new java.sql.LocalDate(employee.getHireDate().getTime()));
-      stmt.setInt(7, employee.getStatus().ordinal());
+      stmt.setDate(6, java.sql.Date.valueOf(employee.getJoiningDate()));
+      stmt.setString(7, employee.getStatus());
       stmt.setString(8, employee.getJobTitle());
       stmt.setString(9, employee.getDepartment());
       stmt.setDouble(10, employee.getSalary());
@@ -112,6 +78,8 @@ class Employee{
       stmt.executeUpdate();
   }
 	
+	
+	//getters functions
 	public double getSalary() {
 		return salary;
 	}
@@ -148,33 +116,207 @@ class Employee{
 	public LocalDate getJoiningDate() {
 		return joiningDate;
 	}
+	public double getSalary(int emp_id, Connection conn) throws SQLException {
+	    String sql = "SELECT salary FROM employee WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1, emp_id);
+	    ResultSet rs = stmt.executeQuery();
+	    if (rs.next()) {
+	        return rs.getDouble("salary");
+	    } else {
+	        throw new SQLException("Employee with emp_id " + emp_id + " not found");
+	    }
+	}
+
+	public String getStatus(int emp_id, Connection conn) throws SQLException {
+	    String sql = "SELECT status FROM employee WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1, emp_id);
+	    ResultSet rs = stmt.executeQuery();
+	    if (rs.next()) {
+	        return rs.getString("status");
+	    } else {
+	        throw new SQLException("Employee with emp_id " + emp_id + " not found");
+	    }
+	}
+
+	public int getPhone(int emp_id, Connection conn) throws SQLException {
+	    String sql = "SELECT phone FROM employee WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1, emp_id);
+	    ResultSet rs = stmt.executeQuery();
+	    if (rs.next()) {
+	        return rs.getInt("phone");
+	    } else {
+	        throw new SQLException("Employee with emp_id " + emp_id + " not found");
+	    }
+	}
+
+	public String getFirstName(int emp_id, Connection conn) throws SQLException {
+	    String sql = "SELECT first_name FROM employee WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1, emp_id);
+	    ResultSet rs = stmt.executeQuery();
+	    if (rs.next()) {
+	        return rs.getString("first_name");
+	    } else {
+	        throw new SQLException("Employee with emp_id " + emp_id + " not found");
+	    }
+	}
+
+	public String getLastName(int emp_id, Connection conn) throws SQLException {
+	    String sql = "SELECT last_name FROM employee WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1, emp_id);
+	    ResultSet rs = stmt.executeQuery();
+	    if (rs.next()) {
+	        return rs.getString("last_name");
+	    } else {
+	        throw new SQLException("Employee with emp_id " + emp_id + " not found");
+	    }
+	}
+
+	public String getEmail(int emp_id, Connection conn) throws SQLException {
+	    String sql = "SELECT email FROM employee WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1, emp_id);
+	    ResultSet rs = stmt.executeQuery();
+	    if (rs.next()) {
+	        return rs.getString("email");
+	    } else {
+	        throw new SQLException("Employee with emp_id " + emp_id + " not found");
+	    }
+	}
+
+	public String getJobTitle(int emp_id, Connection conn) throws SQLException {
+	    String sql = "SELECT job_title FROM employee WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1, emp_id);
+	    ResultSet rs = stmt.executeQuery();
+	    if (rs.next()) {
+	        return rs.getString("job_title");
+	    } else {
+	        throw new SQLException("Employee with emp_id " + emp_id + " not found");
+	    }
+	}
+
+	public String getDepartment(int emp_id, Connection conn) throws SQLException {
+	    String sql = "SELECT department FROM employee WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1, emp_id);
+	    ResultSet rs = stmt.executeQuery();
+	    if (rs.next()) {
+	        return rs.getString("department");
+	    } else {
+	        return null;
+	    }
+	}
+	public LocalDate getJoiningDate(int emp_id, Connection conn) throws SQLException {
+	    String sql = "SELECT joiningdate FROM employee WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1, emp_id);
+	    ResultSet rs = stmt.executeQuery();
+
+	    if (rs.next()) {
+	    	java.sql.Date joiningdate = rs.getDate("joiningdate");
+	        return joiningdate.toLocalDate();
+	    }
+
+	    return null;
+	}
+	public String getAddress(int emp_id, Connection conn) throws SQLException {
+	    String sql = "SELECT address FROM employee WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1, emp_id);
+	    ResultSet rs = stmt.executeQuery();
+	    if (rs.next()) {
+	        return rs.getString("address");
+	    } else {
+	        throw new SQLException("No employee found with emp_id: " + emp_id);
+	    }
+	}
 	
-//	public static List<Employee> readEmployeesFromFile(String filename) {
-//List<Employee> employees = new ArrayList<>();
-//try {
-//    Scanner scanner = new Scanner(new File(filename));
-//    while (scanner.hasNextLine()) {
-//        String line = scanner.nextLine();
-//        String[] parts = line.split(",");
-//        int id = Integer.parseInt(parts[0].trim());
-//        String firstName = parts[1].trim();
-//        String lastName = parts[2].trim();
-//        String email = parts[3].trim();
-//        String phone = parts[4].trim();
-//        String address = parts[5].trim();
-//        Date hireDate = new LocalDate(parts[6].trim());
-//        String status = parts[7].trim();
-//        String jobTitle = parts[8].trim();
-//        String department = parts[9].trim();
-//        Double salary=Double.parseDouble(parts[10].trim());
-//        Employee employee = new Employee(id, firstName, lastName, email, phone, address, hireDate, status,jobTitle,department,salary);
-//        employees.add(employee);
-//    }
-//    scanner.close();
-//} catch (FileNotFoundException e) {
-//    System.err.println("File not found: " + filename);
-//}
-//return employees;
-//}
 	
+	//setter functions 
+	public void setFirstName(int emp_id, String firstName, Connection conn) throws SQLException {
+	    String sql = "UPDATE employee SET first_name = ? WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setString(1, firstName);
+	    stmt.setInt(2, emp_id);
+	    stmt.executeUpdate();
+	}
+
+	public void setLastName(int emp_id, String lastName, Connection conn) throws SQLException {
+	    String sql = "UPDATE employee SET last_name = ? WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setString(1, lastName);
+	    stmt.setInt(2, emp_id);
+	    stmt.executeUpdate();
+	}
+
+	public void setEmail(int emp_id, String email, Connection conn) throws SQLException {
+	    String sql = "UPDATE employee SET email = ? WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setString(1, email);
+	    stmt.setInt(2, emp_id);
+	    stmt.executeUpdate();
+	}
+
+	public void setPhone(int emp_id, int phone, Connection conn) throws SQLException {
+	    String sql = "UPDATE employee SET phone = ? WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1, phone);
+	    stmt.setInt(2, emp_id);
+	    stmt.executeUpdate();
+	}
+
+	public void setAddress(int emp_id, String address, Connection conn) throws SQLException {
+	    String sql = "UPDATE employee SET address = ? WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setString(1, address);
+	    stmt.setInt(2, emp_id);
+	    stmt.executeUpdate();
+	}
+
+	public void setJoiningDate(int emp_id, LocalDate joiningDate, Connection conn) throws SQLException {
+	    String sql = "UPDATE employee SET joiningdate = ? WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setDate(1, java.sql.Date.valueOf(joiningDate));
+	    stmt.setInt(2, emp_id);
+	    stmt.executeUpdate();
+	}
+
+	public void setDepartment(int emp_id, String department, Connection conn) throws SQLException {
+	    String sql = "UPDATE employee SET department = ? WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setString(1, department);
+	    stmt.setInt(2, emp_id);
+	    stmt.executeUpdate();
+	}
+
+	public void setJobTitle(int emp_id, String jobTitle, Connection conn) throws SQLException {
+	    String sql = "UPDATE employee SET job_title = ? WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setString(1, jobTitle);
+	    stmt.setInt(2, emp_id);
+	    stmt.executeUpdate();
+	}
+
+	public void setSalary(int emp_id, double salary, Connection conn) throws SQLException {
+	    String sql = "UPDATE employee SET salary = ? WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setDouble(1, salary);
+	    stmt.setInt(2, emp_id);
+	    stmt.executeUpdate();
+	}
+	public void setStatus(int emp_id, String newStatus, Connection conn) throws SQLException {
+	    String sql = "UPDATE employee SET status = ? WHERE emp_id = ?";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setString(1, newStatus);
+	    stmt.setInt(2, emp_id);
+	    stmt.executeUpdate();
+	}
+
+
+
 }
