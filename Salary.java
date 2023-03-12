@@ -15,20 +15,17 @@ public class Salary {
 	private double salary;
 	private int leaveBalance;
 	
-	public Salary(int emp_id,double salary,int leaveBalance) {
-		this.emp_id=emp_id;
-		this.salary=salary;
-		this.leaveBalance=leaveBalance;
-	}
+//	public Salary(int emp_id,double salary,int leaveBalance) {
+//		this.emp_id=emp_id;
+//		this.salary=salary;
+//		this.leaveBalance=leaveBalance;
+//	}
 	
 	//methods
 	public double getSalary() {return 0.0;};
 	
 	public double calculateSalary(int emp_id) throws SQLException, ClassNotFoundException {
 	    // Establish a connection to the database
-	    String url = "jdbc:mysql://localhost:3306/your_database_name";
-	    String userName = "your_username";
-	    String password = "your_password";
 	    Connection connection = null;
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;

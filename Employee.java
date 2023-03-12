@@ -1,6 +1,6 @@
 package employeeManagement;
 
-//package employeeManagement;
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,15 +12,15 @@ import java.time.LocalDate;
 
 class Employee{
 	
-	private int emp_id,phoneNumber;
-	private String first_name, last_name, email, jobTitle, department, address;
+	private int emp_id;
+	private String first_name, last_name, email, jobTitle, department, address,phoneNumber;
 	private Double salary;
 	private LocalDate joiningDate;
 	private String status;
 	
 	public Employee(int emp_id,String first_name, String last_name, 
 			String email ,String address,
-			int phoneNumber, LocalDate joiningDate,
+			String phoneNumber, LocalDate joiningDate,
 			String status, String jobTitle, String department, Double salary) {
 		this.emp_id = emp_id;
 		this.first_name=first_name;
@@ -39,13 +39,13 @@ class Employee{
   public void addEmployee(Connection conn, Employee employee) throws SQLException {
   	
       // Add a new employee to the database
-      String sql = "INSERT INTO employee (emp_id, first_name, last_name, email, phone, address, hire_date, status_id, job_title, department, salary) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      String sql = "INSERT INTO employee (emp_id, first_name, last_name, email, phonenumber, address, joiningdate, status, jobtitle, department, salary) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setInt(1, employee.getEmpId());
       stmt.setString(2, employee.getFirstName());
       stmt.setString(3, employee.getLastName());
       stmt.setString(4, employee.getEmail());
-      stmt.setInt(5, employee.getPhone());
+      stmt.setString(5, employee.getPhone());
       stmt.setString(6, employee.getAddress());
       stmt.setDate(7, java.sql.Date.valueOf(employee.getJoiningDate()));
       stmt.setString(8, employee.getStatus());
@@ -62,12 +62,12 @@ class Employee{
 	public void updateEmployee(Connection conn, Employee employee) throws SQLException {
   	
       // Update an existing employee in the database
-      String sql = "UPDATE employee SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?, hire_date = ?, status_id = ?, job_title = ?, department = ?, salary = ? WHERE emp_id = ?";
+      String sql = "UPDATE employee SET first_name = ?, last_name = ?, email = ?, phonenumber = ?, address = ?, joingdate = ?, status = ?, jobtitle = ?, department = ?, salary = ? WHERE emp_id = ?";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setString(1, employee.getFirstName());
       stmt.setString(2, employee.getLastName());
       stmt.setString(3, employee.getEmail());
-      stmt.setInt(4, employee.getPhone());
+      stmt.setString(4, employee.getPhone());
       stmt.setString(5, employee.getAddress());
       stmt.setDate(6, java.sql.Date.valueOf(employee.getJoiningDate()));
       stmt.setString(7, employee.getStatus());
@@ -88,7 +88,7 @@ class Employee{
 		return status;
 	}
 
-	public int getPhone() {
+	public String getPhone() {
 		return phoneNumber;
 	}
 	public int getEmpId() {
@@ -140,13 +140,13 @@ class Employee{
 	    }
 	}
 
-	public int getPhone(int emp_id, Connection conn) throws SQLException {
-	    String sql = "SELECT phone FROM employee WHERE emp_id = ?";
+	public String getPhone(int emp_id, Connection conn) throws SQLException {
+	    String sql = "SELECT phonenumber FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
 	    ResultSet rs = stmt.executeQuery();
 	    if (rs.next()) {
-	        return rs.getInt("phone");
+	        return rs.getString("phonenumber");
 	    } else {
 	        throw new SQLException("Employee with emp_id " + emp_id + " not found");
 	    }
@@ -189,7 +189,7 @@ class Employee{
 	}
 
 	public String getJobTitle(int emp_id, Connection conn) throws SQLException {
-	    String sql = "SELECT job_title FROM employee WHERE emp_id = ?";
+	    String sql = "SELECT jobtitle FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
 	    ResultSet rs = stmt.executeQuery();
@@ -262,10 +262,10 @@ class Employee{
 	    stmt.executeUpdate();
 	}
 
-	public void setPhone(int emp_id, int phone, Connection conn) throws SQLException {
-	    String sql = "UPDATE employee SET phone = ? WHERE emp_id = ?";
+	public void setPhone(int emp_id, String phone, Connection conn) throws SQLException {
+	    String sql = "UPDATE employee SET phonenumber = ? WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
-	    stmt.setInt(1, phone);
+	    stmt.setString(1, phone);
 	    stmt.setInt(2, emp_id);
 	    stmt.executeUpdate();
 	}
@@ -295,7 +295,7 @@ class Employee{
 	}
 
 	public void setJobTitle(int emp_id, String jobTitle, Connection conn) throws SQLException {
-	    String sql = "UPDATE employee SET job_title = ? WHERE emp_id = ?";
+	    String sql = "UPDATE employee SET jobtitle = ? WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setString(1, jobTitle);
 	    stmt.setInt(2, emp_id);

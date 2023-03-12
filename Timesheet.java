@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Timesheet {
@@ -41,6 +42,52 @@ public class Timesheet {
 		return hoursWorked;
 	}
 	
+//	public void updateTimeSheet() throws ClassNotFoundException, SQLException {
+//	    Scanner scanner = new Scanner(System.in);
+//	    Connection connection = null;
+//	    PreparedStatement ps = null;
+//	    try {
+//	        Class.forName("oracle.jdbc.driver.OracleDriver");
+//	        connection = DriverManager.getConnection(url, userName, password);
+//
+//	        System.out.print("Enter employee ID: ");
+//	        int emp_id = scanner.nextInt();
+//
+//	        System.out.print("Enter date (yyyy-mm-dd): ");
+//	        LocalDate date = LocalDate.parse(scanner.next());
+//
+//	        System.out.print("Enter hours worked: ");
+//	        int hoursWorked = scanner.nextInt();
+//
+//	        String query = "UPDATE timesheet SET hours_worked = ? WHERE emp_id = ? AND date = ?";
+//	        ps = connection.prepareStatement(query);
+//	        ps.setInt(1, hoursWorked);
+//	        ps.setInt(2, emp_id);
+//	        ps.setDate(3, java.sql.Date.valueOf(date));
+//	        int rowsUpdated = ps.executeUpdate();
+//
+//	        if (rowsUpdated > 0) {
+//	            System.out.println("Time sheet updated successfully.");
+//	        } else {
+//	            System.out.println("No time sheet records found for the given input.");
+//	        }
+//
+//	    }catch (SQLException e) {
+//	        System.out.println("Error updating time sheet: " + e.getMessage());
+//	    } catch (DateTimeParseException e) {
+//	        System.out.println("Error: invalid date format.");
+//	    } catch (NumberFormatException e) {
+//	        System.out.println("Error: invalid numeric format.");
+//	    } finally {
+//	        if (connection != null) {
+//	            connection.close();
+//	        }
+//	        if (ps != null) {
+//	            ps.close();
+//	        }
+//	        scanner.close();
+//	    }
+//	}
 	public void updateTimeSheet() throws ClassNotFoundException, SQLException {
 	    Scanner scanner = new Scanner(System.in);
 	    Connection connection = null;
@@ -50,15 +97,32 @@ public class Timesheet {
 	        connection = DriverManager.getConnection(url, userName, password);
 
 	        System.out.print("Enter employee ID: ");
-	        int emp_id = scanner.nextInt();
+	        int emp_id = 0;
+	        while (!scanner.hasNextInt()) {
+	            System.out.println("Error: Invalid input. Please enter a valid employee ID.");
+	            scanner.next();
+	        }
+	        emp_id = scanner.nextInt();
 
 	        System.out.print("Enter date (yyyy-mm-dd): ");
-	        LocalDate date = LocalDate.parse(scanner.next());
+	        LocalDate date = null;
+	        while (date == null) {
+	            try {
+	                date = LocalDate.parse(scanner.next());
+	            } catch (DateTimeParseException e) {
+	                System.out.println("Error: Invalid date format. Please enter a valid date (yyyy-mm-dd).");
+	            }
+	        }
 
 	        System.out.print("Enter hours worked: ");
-	        int hoursWorked = scanner.nextInt();
+	        int hoursWorked = 0;
+	        while (!scanner.hasNextInt()) {
+	            System.out.println("Error: Invalid input. Please enter a valid number of hours worked.");
+	            scanner.next();
+	        }
+	        hoursWorked = scanner.nextInt();
 
-	        String query = "UPDATE timesheet SET hours_worked = ? WHERE emp_id = ? AND date = ?";
+	        String query = "UPDATE timesheet SET hoursworked = ? WHERE emp_id = ? AND today_date = ?";
 	        ps = connection.prepareStatement(query);
 	        ps.setInt(1, hoursWorked);
 	        ps.setInt(2, emp_id);
@@ -71,12 +135,8 @@ public class Timesheet {
 	            System.out.println("No time sheet records found for the given input.");
 	        }
 
-	    } catch (SQLException e) {
+	    }catch (SQLException e) {
 	        System.out.println("Error updating time sheet: " + e.getMessage());
-	    } catch (DateTimeParseException e) {
-	        System.out.println("Error: invalid date format.");
-	    } catch (NumberFormatException e) {
-	        System.out.println("Error: invalid numeric format.");
 	    } finally {
 	        if (connection != null) {
 	            connection.close();
@@ -87,6 +147,7 @@ public class Timesheet {
 	        scanner.close();
 	    }
 	}
+
 
 	
 	public void sendTimesheetReminder() {
