@@ -20,14 +20,14 @@ public class Timesheet {
 	private static final String url ="jdbc:oracle:thin:@//localhost:1521/orcl";
 	
 	private int id, emp_id;
-	private LocalDate date;
+	private LocalDate today_date;
 	private int hoursWorked;
-	public Timesheet(int id,int emp_id,LocalDate date,int hoursWorked){
-		this.id=id;
-		this.emp_id=emp_id;
-		this.date=date;
-		this.hoursWorked=hoursWorked;
-	}
+//	public Timesheet(int id,int emp_id,LocalDate date,int hoursWorked){
+//		this.id=id;
+//		this.emp_id=emp_id;
+//		this.today_date=today_date;
+//		this.hoursWorked=hoursWorked;
+//	}
 	public int getId() {
 		return id;
 	}
@@ -35,62 +35,59 @@ public class Timesheet {
 		return emp_id;
 	}
 	public LocalDate getDate() {
-		return date;
+		return today_date;
 	}
 	public int getHoursWorked() {
 		return hoursWorked;
 	}
 	
-	public void addTimeSheet() throws ClassNotFoundException, SQLException {
-		String fileName="";
-		Connection connection=null;
-		PreparedStatement ps = null;
-		Scanner scanner=null;
+	public void updateTimeSheet() throws ClassNotFoundException, SQLException {
+	    Scanner scanner = new Scanner(System.in);
+	    Connection connection = null;
+	    PreparedStatement ps = null;
 	    try {
-	        File file = new File(fileName);
-	        scanner = new Scanner(file);
 	        Class.forName("oracle.jdbc.driver.OracleDriver");
-			connection = DriverManager.getConnection(url,userName,password);
+	        connection = DriverManager.getConnection(url, userName, password);
 
-	        while (scanner.hasNextLine()) {
-	            String line = scanner.nextLine();
-	            String[] tokens = line.split(",");
+	        System.out.print("Enter employee ID: ");
+	        int emp_id = scanner.nextInt();
 
-	            int id = Integer.parseInt(tokens[0]);
-	            int emp_id = Integer.parseInt(tokens[1]);
-	            LocalDate date = LocalDate.parse(tokens[2]);
-	            int hoursWorked = Integer.parseInt(tokens[3]);
+	        System.out.print("Enter date (yyyy-mm-dd): ");
+	        LocalDate date = LocalDate.parse(scanner.next());
 
-	            String query = "Update timesheet SET hours_worked = ? WHERE id = ? AND emp_id = ? date = ? ";
-	            try {
-	                ps = connection.prepareStatement(query);
-	                ps.setInt(1, id);
-	                ps.setInt(2, emp_id);
-	                ps.setDate(3, java.sql.Date.valueOf(date));
-	                ps.setInt(4, hoursWorked);
-	                ps.executeUpdate();
-	            } catch (SQLException e) {
-	                System.out.println("Error adding timesheet to database: " + e.getMessage());
-	            }
+	        System.out.print("Enter hours worked: ");
+	        int hoursWorked = scanner.nextInt();
+
+	        String query = "UPDATE timesheet SET hours_worked = ? WHERE emp_id = ? AND date = ?";
+	        ps = connection.prepareStatement(query);
+	        ps.setInt(1, hoursWorked);
+	        ps.setInt(2, emp_id);
+	        ps.setDate(3, java.sql.Date.valueOf(date));
+	        int rowsUpdated = ps.executeUpdate();
+
+	        if (rowsUpdated > 0) {
+	            System.out.println("Time sheet updated successfully.");
+	        } else {
+	            System.out.println("No time sheet records found for the given input.");
 	        }
 
-	        System.out.println("Time sheet data from file " + fileName + " added successfully.");
-	    } catch (FileNotFoundException e) {
-	        System.out.println("Error: file " + fileName + " not found.");
+	    } catch (SQLException e) {
+	        System.out.println("Error updating time sheet: " + e.getMessage());
 	    } catch (DateTimeParseException e) {
-	        System.out.println("Error: invalid date format in file " + fileName + ".");
+	        System.out.println("Error: invalid date format.");
 	    } catch (NumberFormatException e) {
-	        System.out.println("Error: invalid numeric format in file " + fileName + ".");
-	    }finally {
-	    	if(connection!=null) {
-	    		connection.close();
-	    	}if(ps!=null) {
-	    		ps.close();
-	    	}if(scanner!=null) {
-	    		scanner.close();
-	    	}
+	        System.out.println("Error: invalid numeric format.");
+	    } finally {
+	        if (connection != null) {
+	            connection.close();
+	        }
+	        if (ps != null) {
+	            ps.close();
+	        }
+	        scanner.close();
 	    }
 	}
+
 	
 	public void sendTimesheetReminder() {
 	    try {

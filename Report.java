@@ -96,7 +96,7 @@ public class Report {
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;
 	    try {
-	        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee_records", "username", "password");
+	        conn = DriverManager.getConnection(url, userName, password);
 	        String query = "SELECT * FROM employees WHERE salary >= ? AND salary <= ?";
 	        stmt = conn.prepareStatement(query);
 	        stmt.setDouble(1, minSalary);
