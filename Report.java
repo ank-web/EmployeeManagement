@@ -8,27 +8,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Report {
-	private int id;
-	private int emp_id;
-	private String status;
 	
 	private static final String userName = "CISADM";
 	private static final String password = "CISADM";
 	private static final String url ="jdbc:oracle:thin:@//localhost:1521/orcl";
-	
-//	public Report(int id,int emp_id,String status) {
-//		this.id=id;
-//		this.emp_id=emp_id;
-//		this.status=status;
-//	}
-	
 	//methods
 	
 	// Generate a report of the total salary paid to all employees for a given month and year    
@@ -142,45 +129,44 @@ public class Report {
 	    return numEmployees;
 	}
 	
-	public void generate_monthly_report(String status) throws IOException {
+	public void generate_monthly_report(String s) throws IOException {
 	    // Connect to the database using JDBC or another ORM framework
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;
 	    try {
 	        conn = DriverManager.getConnection(url, userName, password);
-	        String query = "SELECT * FROM employees WHERE status = ?";
+	        String query = "SELECT * FROM employee WHERE status = ?";
 	        stmt = conn.prepareStatement(query);
-	        stmt.setString(1, status);
+	        stmt.setString(1, s);
 	        rs = stmt.executeQuery();
 
-	        // Open a file for writing the monthly report
-	        //FileWriter writer = new FileWriter("monthly_report.txt");
-	        //writer.write("Monthly Report for Employees with Status: " + status + "\n\n");
+	        //Open a file for writing the monthly report
+	        FileWriter writer = new FileWriter("C:\\Users\\AnkitKumar\\eclipse-workspace\\ankit\\src\\employeeManagement\\monthly_report.txt");
+	        writer.write("Monthly Report for Employees with Status: " + s + "\n\n");
 
 	        // Loop through the result set and process each employee record
 	        while (rs.next()) {
 	            int emp_id = rs.getInt("emp_id");
-	            String name = rs.getString("name");
+	            String first_name = rs.getString("first_name");
 	            double salary = rs.getDouble("salary");
-	            int leaveBalance = rs.getInt("leave_balance");
-	            System.out.println("Working Properly");
+	            //int leaveBalance = rs.getInt("leave_balance");
 
 	            // Calculate the required metrics for the monthly report
 	            // ...
 
-	            // Write the employee information and metrics to the report file
-//	            writer.write("Employee ID: " + emp_id + "\n");
-//	            writer.write("Name: " + name + "\n");
-//	            writer.write("Salary: " + salary + "\n");
-//	            writer.write("Leave Balance: " + leaveBalance + "\n");
-//	            // Write the calculated metrics to the report file
-//	            // ...
-//	            writer.write("\n");
+	            //Write the employee information and metrics to the report file
+	            writer.write("Employee ID: " + emp_id + "\n");
+	            writer.write("Name: " + first_name + "\n");
+	            writer.write("Salary: " + salary + "\n");
+	            //writer.write("Leave Balance: " + leaveBalance + "\n");
+	            // Write the calculated metrics to the report file
+	            // ...
+	            writer.write("\n");
 	        }
 
 	        // Close the report file
-	        //writer.close();
+	        writer.close();
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    } finally {
@@ -223,8 +209,8 @@ public class Report {
 	        rs = stmt.executeQuery();
 
 	        // Open a file for writing the monthly report
-	        FileWriter writer = new FileWriter("monthly_report.txt");
-	        writer.write("Monthly Report for Employees with Salary Between " + minSalary + " and " + maxSalary + "\n\n");
+//	        FileWriter writer = new FileWriter("monthly_report.txt");
+//	        writer.write("Monthly Report for Employees with Salary Between " + minSalary + " and " + maxSalary + "\n\n");
 
 	        // Loop through the result set and process each employee record
 	        while (rs.next()) {
@@ -237,18 +223,18 @@ public class Report {
 	            // ...
 
 	            // Write the employee information and metrics to the report file
-	            writer.write("Employee ID: " + emp_id + "\n");
-	            writer.write("Name: " + name + "\n");
-	            writer.write("Salary: " + salary + "\n");
-	            writer.write("Leave Balance: " + leaveBalance + "\n");
-	            // Write the calculated metrics to the report file
-	            // ...
-	            writer.write("\n");
+//	            writer.write("Employee ID: " + emp_id + "\n");
+//	            writer.write("Name: " + name + "\n");
+//	            writer.write("Salary: " + salary + "\n");
+//	            writer.write("Leave Balance: " + leaveBalance + "\n");
+//	            // Write the calculated metrics to the report file
+//	            // ...
+//	            writer.write("\n");
 	        }
 
 	        // Close the report file
-	        writer.close();
-	    } catch (SQLException | IOException e) {
+//	        writer.close();
+	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    } finally {
 	        // Close the database connection, statement, and result set

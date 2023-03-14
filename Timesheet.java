@@ -1,7 +1,5 @@
 package employeeManagement;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -23,12 +21,7 @@ public class Timesheet {
 	private int id, emp_id;
 	private LocalDate today_date;
 	private int hoursWorked;
-//	public Timesheet(int id,int emp_id,LocalDate date,int hoursWorked){
-//		this.id=id;
-//		this.emp_id=emp_id;
-//		this.today_date=today_date;
-//		this.hoursWorked=hoursWorked;
-//	}
+	
 	public int getId() {
 		return id;
 	}
@@ -88,7 +81,7 @@ public class Timesheet {
 //	        scanner.close();
 //	    }
 //	}
-	public void updateTimeSheet() throws ClassNotFoundException, SQLException {
+	public void updateTimeSheet() throws ClassNotFoundException, SQLException,NoSuchElementException {
 	    Scanner scanner = new Scanner(System.in);
 	    Connection connection = null;
 	    PreparedStatement ps = null;
@@ -103,12 +96,14 @@ public class Timesheet {
 	            scanner.next();
 	        }
 	        emp_id = scanner.nextInt();
+	        scanner.nextLine();
 
 	        System.out.print("Enter date (yyyy-mm-dd): ");
 	        LocalDate date = null;
 	        while (date == null) {
 	            try {
 	                date = LocalDate.parse(scanner.next());
+	                scanner.nextLine();
 	            } catch (DateTimeParseException e) {
 	                System.out.println("Error: Invalid date format. Please enter a valid date (yyyy-mm-dd).");
 	            }
@@ -121,6 +116,7 @@ public class Timesheet {
 	            scanner.next();
 	        }
 	        hoursWorked = scanner.nextInt();
+	        scanner.nextLine();
 
 	        String query = "UPDATE timesheet SET hoursworked = ? WHERE emp_id = ? AND today_date = ?";
 	        ps = connection.prepareStatement(query);
@@ -144,7 +140,7 @@ public class Timesheet {
 	        if (ps != null) {
 	            ps.close();
 	        }
-	        scanner.close();
+	        //scanner.close();
 	    }
 	}
 

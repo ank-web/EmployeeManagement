@@ -15,12 +15,6 @@ public class Salary {
 	private double salary;
 	private int leaveBalance;
 	
-//	public Salary(int emp_id,double salary,int leaveBalance) {
-//		this.emp_id=emp_id;
-//		this.salary=salary;
-//		this.leaveBalance=leaveBalance;
-//	}
-	
 	//methods
 	public double getSalary() {return 0.0;};
 	

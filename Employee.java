@@ -1,26 +1,24 @@
 package employeeManagement;
 
-//package employeeManagement;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-
-
 class Employee{
 	
-	private int emp_id,phoneNumber;
-	private String first_name, last_name, email, jobTitle, department, address;
-	private Double salary;
+	private int emp_id;
+	private String first_name, last_name, email, jobTitle, department, address,status;
+	private Double salary,phoneNumber;
 	private LocalDate joiningDate;
-	private String status;
 	
+	public Employee() {
+		
+	}
 	public Employee(int emp_id,String first_name, String last_name, 
 			String email ,String address,
-			int phoneNumber, LocalDate joiningDate,
+			Double phoneNumber, LocalDate joiningDate,
 			String status, String jobTitle, String department, Double salary) {
 		this.emp_id = emp_id;
 		this.first_name=first_name;
@@ -39,13 +37,13 @@ class Employee{
   public void addEmployee(Connection conn, Employee employee) throws SQLException {
   	
       // Add a new employee to the database
-      String sql = "INSERT INTO employee (emp_id, first_name, last_name, email, phone, address, joiningdate, statusid, jobtitle, department, salary) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      String sql = "INSERT INTO employee (emp_id, first_name, last_name, email, phonenumber, address, joiningdate, status, jobtitle, department, salary) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setInt(1, employee.getEmpId());
       stmt.setString(2, employee.getFirstName());
       stmt.setString(3, employee.getLastName());
       stmt.setString(4, employee.getEmail());
-      stmt.setInt(5, employee.getPhone());
+      stmt.setDouble(5, employee.getPhone());
       stmt.setString(6, employee.getAddress());
       stmt.setDate(7, java.sql.Date.valueOf(employee.getJoiningDate()));
       stmt.setString(8, employee.getStatus());
@@ -55,15 +53,19 @@ class Employee{
       stmt.executeUpdate();
   }
 
+
+
+
+
 	public void updateEmployee(Connection conn, Employee employee) throws SQLException {
   	
       // Update an existing employee in the database
-      String sql = "UPDATE employee SET first_name = ?, last_name = ?, email = ?, phone = ?, address = ?, joiningdate = ?, status = ?, jobtitle = ?, department = ?, salary = ? WHERE emp_id = ?";
+      String sql = "UPDATE employee SET first_name = ?, last_name = ?, email = ?, phonenumber = ?, address = ?, joingdate = ?, status = ?, jobtitle = ?, department = ?, salary = ? WHERE emp_id = ?";
       PreparedStatement stmt = conn.prepareStatement(sql);
       stmt.setString(1, employee.getFirstName());
       stmt.setString(2, employee.getLastName());
       stmt.setString(3, employee.getEmail());
-      stmt.setInt(4, employee.getPhone());
+      stmt.setDouble(4, employee.getPhone());
       stmt.setString(5, employee.getAddress());
       stmt.setDate(6, java.sql.Date.valueOf(employee.getJoiningDate()));
       stmt.setString(7, employee.getStatus());
@@ -83,7 +85,8 @@ class Employee{
 	public String getStatus() {
 		return status;
 	}
-	public int getPhone() {
+
+	public Double getPhone() {
 		return phoneNumber;
 	}
 	public int getEmpId() {
@@ -111,7 +114,7 @@ class Employee{
 	public LocalDate getJoiningDate() {
 		return joiningDate;
 	}
-	public static double getSalary(int emp_id, Connection conn) throws SQLException {
+	public double getSalary(int emp_id, Connection conn) throws SQLException {
 	    String sql = "SELECT salary FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
@@ -123,7 +126,7 @@ class Employee{
 	    }
 	}
 
-	public static String getStatus(int emp_id, Connection conn) throws SQLException {
+	public String getStatus(int emp_id, Connection conn) throws SQLException {
 	    String sql = "SELECT status FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
@@ -135,19 +138,19 @@ class Employee{
 	    }
 	}
 
-	public static int getPhone(int emp_id, Connection conn) throws SQLException {
-	    String sql = "SELECT phone FROM employee WHERE emp_id = ?";
+	public Double getPhone(int emp_id, Connection conn) throws SQLException {
+	    String sql = "SELECT phonenumber FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
 	    ResultSet rs = stmt.executeQuery();
 	    if (rs.next()) {
-	        return rs.getInt("phone");
+	        return rs.getDouble("phonenumber");
 	    } else {
 	        throw new SQLException("Employee with emp_id " + emp_id + " not found");
 	    }
 	}
 
-	public static String getFirstName(int emp_id, Connection conn) throws SQLException {
+	public String getFirstName(int emp_id, Connection conn) throws SQLException {
 	    String sql = "SELECT first_name FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
@@ -159,7 +162,7 @@ class Employee{
 	    }
 	}
 
-	public static String getLastName(int emp_id, Connection conn) throws SQLException {
+	public String getLastName(int emp_id, Connection conn) throws SQLException {
 	    String sql = "SELECT last_name FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
@@ -171,7 +174,7 @@ class Employee{
 	    }
 	}
 
-	public static String getEmail(int emp_id, Connection conn) throws SQLException {
+	public String getEmail(int emp_id, Connection conn) throws SQLException {
 	    String sql = "SELECT email FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
@@ -183,7 +186,7 @@ class Employee{
 	    }
 	}
 
-	public static String getJobTitle(int emp_id, Connection conn) throws SQLException {
+	public String getJobTitle(int emp_id, Connection conn) throws SQLException {
 	    String sql = "SELECT jobtitle FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
@@ -195,7 +198,7 @@ class Employee{
 	    }
 	}
 
-	public static String getDepartment(int emp_id, Connection conn) throws SQLException {
+	public String getDepartment(int emp_id, Connection conn) throws SQLException {
 	    String sql = "SELECT department FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
@@ -206,7 +209,7 @@ class Employee{
 	        return null;
 	    }
 	}
-	public static LocalDate getJoiningDate(int emp_id, Connection conn) throws SQLException {
+	public LocalDate getJoiningDate(int emp_id, Connection conn) throws SQLException {
 	    String sql = "SELECT joiningdate FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
@@ -219,7 +222,7 @@ class Employee{
 
 	    return null;
 	}
-	public static String getAddress(int emp_id, Connection conn) throws SQLException {
+	public String getAddress(int emp_id, Connection conn) throws SQLException {
 	    String sql = "SELECT address FROM employee WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setInt(1, emp_id);
@@ -233,7 +236,7 @@ class Employee{
 	
 	
 	//setter functions 
-	public static void setFirstName(int emp_id, String firstName, Connection conn) throws SQLException {
+	public void setFirstName(int emp_id, String firstName, Connection conn) throws SQLException {
 	    String sql = "UPDATE employee SET first_name = ? WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setString(1, firstName);
@@ -241,7 +244,7 @@ class Employee{
 	    stmt.executeUpdate();
 	}
 
-	public static void setLastName(int emp_id, String lastName, Connection conn) throws SQLException {
+	public void setLastName(int emp_id, String lastName, Connection conn) throws SQLException {
 	    String sql = "UPDATE employee SET last_name = ? WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setString(1, lastName);
@@ -249,7 +252,7 @@ class Employee{
 	    stmt.executeUpdate();
 	}
 
-	public static void setEmail(int emp_id, String email, Connection conn) throws SQLException {
+	public void setEmail(int emp_id, String email, Connection conn) throws SQLException {
 	    String sql = "UPDATE employee SET email = ? WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setString(1, email);
@@ -257,15 +260,15 @@ class Employee{
 	    stmt.executeUpdate();
 	}
 
-	public static void setPhone(int emp_id, int phone, Connection conn) throws SQLException {
-	    String sql = "UPDATE employee SET phone = ? WHERE emp_id = ?";
+	public void setPhone(int emp_id, Double phone, Connection conn) throws SQLException {
+	    String sql = "UPDATE employee SET phonenumber = ? WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
-	    stmt.setInt(1, phone);
+	    stmt.setDouble(1, phone);
 	    stmt.setInt(2, emp_id);
 	    stmt.executeUpdate();
 	}
 
-	public static void setAddress(int emp_id, String address, Connection conn) throws SQLException {
+	public void setAddress(int emp_id, String address, Connection conn) throws SQLException {
 	    String sql = "UPDATE employee SET address = ? WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setString(1, address);
@@ -273,7 +276,7 @@ class Employee{
 	    stmt.executeUpdate();
 	}
 
-	public static void setJoiningDate(int emp_id, LocalDate joiningDate, Connection conn) throws SQLException {
+	public void setJoiningDate(int emp_id, LocalDate joiningDate, Connection conn) throws SQLException {
 	    String sql = "UPDATE employee SET joiningdate = ? WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setDate(1, java.sql.Date.valueOf(joiningDate));
@@ -281,7 +284,7 @@ class Employee{
 	    stmt.executeUpdate();
 	}
 
-	public static void setDepartment(int emp_id, String department, Connection conn) throws SQLException {
+	public void setDepartment(int emp_id, String department, Connection conn) throws SQLException {
 	    String sql = "UPDATE employee SET department = ? WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setString(1, department);
@@ -289,7 +292,7 @@ class Employee{
 	    stmt.executeUpdate();
 	}
 
-	public static void setJobTitle(int emp_id, String jobTitle, Connection conn) throws SQLException {
+	public void setJobTitle(int emp_id, String jobTitle, Connection conn) throws SQLException {
 	    String sql = "UPDATE employee SET jobtitle = ? WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setString(1, jobTitle);
@@ -297,14 +300,14 @@ class Employee{
 	    stmt.executeUpdate();
 	}
 
-	public static void setSalary(int emp_id, double salary, Connection conn) throws SQLException {
+	public void setSalary(int emp_id, double salary, Connection conn) throws SQLException {
 	    String sql = "UPDATE employee SET salary = ? WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setDouble(1, salary);
 	    stmt.setInt(2, emp_id);
 	    stmt.executeUpdate();
 	}
-	public static void setStatus(int emp_id, String newStatus, Connection conn) throws SQLException {
+	public void setStatus(int emp_id, String newStatus, Connection conn) throws SQLException {
 	    String sql = "UPDATE employee SET status = ? WHERE emp_id = ?";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
 	    stmt.setString(1, newStatus);
